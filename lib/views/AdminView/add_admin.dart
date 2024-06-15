@@ -258,20 +258,19 @@ class _AdminAddState extends State<AdminAdd> {
                             InkWell(
                               onTap: () {
                                 if (homeController.isChooseEditAdmin == 1) {
-                                  homeController.editAdmin(
-                                      homeController.idAdminEdit.toString(),
+                                  homeController.updateAdmin(
+                                      homeController.idAdminEdit,
                                       homeController.nameAdminEdit.toString(),
                                       homeController.passwordAdminEdit
                                           .toString(),
-                                      homeController.typeOfAccessEditAdmin
-                                          .toString());
+                                      homeController.typeOfAccessEditAdmin);
                                 } else {
-                                  homeController.AddAdmin(
+                                  homeController.addAdmin(
                                       homeController.nameOfNewAdmin.toString(),
                                       homeController.passwordOFNewAdmin
                                           .toString(),
                                       homeController.typeOFAdmin.value);
-                                  homeController.isAddData.value = true;
+                                  //  homeController.isAddData.value = true;
                                 }
                               },
                               child: ContainerCustomApi(
@@ -282,7 +281,7 @@ class _AdminAddState extends State<AdminAdd> {
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 67.h),
                                   child: Text(
-                                    "إضافة المسؤول الان",
+                                    "إضافة- المسؤول الان",
                                     style: TextStyle(
                                       color: AppColors.balckColorTypeThree,
                                       fontFamily: AppTextStyles.Almarai,

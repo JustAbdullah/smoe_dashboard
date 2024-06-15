@@ -121,17 +121,19 @@ class _EditRatioState extends State<EditRatio> {
                                     ),
                                   ),
                                 )),
-
-                                SizedBox(height: 70.h,),
+                            SizedBox(
+                              height: 70.h,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 InkWell(
                                   onTap: () {
+                                    /*
                                     homeController.editRatio(
                                         homeController.ofIdMainTypeDeleteOrEdit,
-                                        homeController.newRatio.toString());
+                                        homeController.newRatio.toString());*/
                                   },
                                   child: ContainerCustomApi(
                                     colorContainer: AppColors.yellowColor,
@@ -180,43 +182,6 @@ class _EditRatioState extends State<EditRatio> {
                           child: Align(
                             alignment: Alignment.center,
                             child: ListOfMainTypes(),
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Lottie.asset(ImagesPath.loading, width: 70.w),
-                                Text(
-                                  "يتم رفع الصورة أنتظر قليلاً",
-                                  style: TextStyle(
-                                    color: AppColors.whiteColor,
-                                    fontFamily: AppTextStyles.Almarai,
-                                    fontSize: 4.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
                           ))),
                   GetX<HomeController>(
                       builder: (controller) => Visibility(

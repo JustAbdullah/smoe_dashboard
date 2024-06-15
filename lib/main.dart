@@ -9,12 +9,19 @@ import 'core/services/appservices.dart';
 
 import 'firebase_options.dart';
 
+import 'views/AdminView/add_admin.dart';
+import 'views/AdminView/admin_view.dart';
+import 'views/Home/home_screen.dart';
 import 'views/InvVeiw/inv_view.dart';
+import 'views/MainTypes/add_main_type.dart';
 import 'views/OrdersView/orders_view.dart';
+import 'views/Products/add_products.dart';
 import 'views/Products/view_products.dart';
 import 'views/ServicesMan/add_service_man.dart';
 import 'views/ServicesMan/view_services_man.dart';
 import 'views/UsersScreen/view_users.dart';
+import 'views/offers/add_offers.dart';
+import 'views/testing.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

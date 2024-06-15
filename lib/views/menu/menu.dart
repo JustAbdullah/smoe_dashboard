@@ -47,6 +47,33 @@ class Menu extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
+                        controller.GoToHomeScreen();
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 37.w,
+                        height: 35.h,
+                        decoration: BoxDecoration(
+                            color: controller.countTheMenu.value == 0
+                                ? Color(0xFFFFAF45)
+                                : Color(0xFF171821),
+                            borderRadius: BorderRadius.circular(3)),
+                        child: Text(
+                          "الرئيسية",
+                          style: TextStyle(
+                            color: AppColors.whiteColor,
+                            fontFamily: AppTextStyles.Almarai,
+                            fontSize: 18,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    InkWell(
+                      onTap: () {
                         if (controller.typeOfAdmin.value != 2) {
                           controller.aboutAccessTheAdminMessage.value = true;
                         } else {
@@ -59,7 +86,7 @@ class Menu extends StatelessWidget {
                         height: 35.h,
                         decoration: BoxDecoration(
                             color: controller.countTheMenu.value == 1
-                                ? AppColors.theAppColorBlueWhite
+                                ? Color(0xFFFFAF45)
                                 : Color(0xFF171821),
                             borderRadius: BorderRadius.circular(3)),
                         child: Text(
@@ -86,7 +113,7 @@ class Menu extends StatelessWidget {
                         height: 35.h,
                         decoration: BoxDecoration(
                             color: controller.countTheMenu.value == 2
-                                ? AppColors.theAppColorBlueWhite
+                                ? Color(0xFFFFAF45)
                                 : Color(0xFF171821),
                             borderRadius: BorderRadius.circular(3)),
                         child: Text(
@@ -113,7 +140,7 @@ class Menu extends StatelessWidget {
                           height: 35.h,
                           decoration: BoxDecoration(
                               color: controller.countTheMenu.value == 3
-                                  ? AppColors.theAppColorBlueWhite
+                                  ? Color(0xFFFFAF45)
                                   : Color(0xFF171821),
                               borderRadius: BorderRadius.circular(3)),
                           child: Text(
@@ -139,7 +166,7 @@ class Menu extends StatelessWidget {
                           height: 35.h,
                           decoration: BoxDecoration(
                               color: controller.countTheMenu.value == 4
-                                  ? AppColors.theAppColorBlueWhite
+                                  ? Color(0xFFFFAF45)
                                   : Color(0xFF171821),
                               borderRadius: BorderRadius.circular(3)),
                           child: Text(
@@ -165,7 +192,7 @@ class Menu extends StatelessWidget {
                           height: 35.h,
                           decoration: BoxDecoration(
                               color: controller.countTheMenu.value == 5
-                                  ? AppColors.theAppColorBlueWhite
+                                  ? Color(0xFFFFAF45)
                                   : Color(0xFF171821),
                               borderRadius: BorderRadius.circular(3)),
                           child: Text(
@@ -195,7 +222,7 @@ class Menu extends StatelessWidget {
                           height: 35.h,
                           decoration: BoxDecoration(
                               color: controller.countTheMenu.value == 6
-                                  ? AppColors.theAppColorBlueWhite
+                                  ? Color(0xFFFFAF45)
                                   : Color(0xFF171821),
                               borderRadius: BorderRadius.circular(3)),
                           child: Text(
@@ -221,7 +248,7 @@ class Menu extends StatelessWidget {
                           height: 35.h,
                           decoration: BoxDecoration(
                               color: controller.countTheMenu.value == 7
-                                  ? AppColors.theAppColorBlueWhite
+                                  ? Color(0xFFFFAF45)
                                   : Color(0xFF171821),
                               borderRadius: BorderRadius.circular(3)),
                           child: Text(
@@ -251,7 +278,7 @@ class Menu extends StatelessWidget {
                         height: 35.h,
                         decoration: BoxDecoration(
                             color: controller.countTheMenu.value == 8
-                                ? AppColors.theAppColorBlueWhite
+                                ? Color(0xFFFFAF45)
                                 : Color(0xFF171821),
                             borderRadius: BorderRadius.circular(3)),
                         child: Text(
@@ -278,38 +305,11 @@ class Menu extends StatelessWidget {
                         height: 35.h,
                         decoration: BoxDecoration(
                             color: controller.countTheMenu.value == 9
-                                ? AppColors.theAppColorBlueWhite
+                                ? Color(0xFFFFAF45)
                                 : Color(0xFF171821),
                             borderRadius: BorderRadius.circular(3)),
                         child: Text(
                           "الطلبيات",
-                          style: TextStyle(
-                            color: AppColors.whiteColor,
-                            fontFamily: AppTextStyles.Almarai,
-                            fontSize: 18,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        controller.GoToWallte();
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 37.w,
-                        height: 35.h,
-                        decoration: BoxDecoration(
-                            color: controller.countTheMenu.value == 10
-                                ? AppColors.theAppColorBlueWhite
-                                : Color(0xFF171821),
-                            borderRadius: BorderRadius.circular(3)),
-                        child: Text(
-                          "المحفظة",
                           style: TextStyle(
                             color: AppColors.whiteColor,
                             fontFamily: AppTextStyles.Almarai,
@@ -332,7 +332,7 @@ class Menu extends StatelessWidget {
                         height: 35.h,
                         decoration: BoxDecoration(
                             color: controller.countTheMenu.value == 11
-                                ? AppColors.theAppColorBlueWhite
+                                ? Color(0xFFFFAF45)
                                 : Color(0xFF171821),
                             borderRadius: BorderRadius.circular(3)),
                         child: Text(
@@ -359,7 +359,7 @@ class Menu extends StatelessWidget {
                         height: 35.h,
                         decoration: BoxDecoration(
                             color: controller.countTheMenu.value == 12
-                                ? AppColors.theAppColorBlueWhite
+                                ? Color(0xFFFFAF45)
                                 : Color(0xFF171821),
                             borderRadius: BorderRadius.circular(3)),
                         child: Text(
@@ -386,7 +386,7 @@ class Menu extends StatelessWidget {
                         height: 35.h,
                         decoration: BoxDecoration(
                             color: controller.countTheMenu.value == 13
-                                ? AppColors.theAppColorBlueWhite
+                                ? Color(0xFFFFAF45)
                                 : Color(0xFF171821),
                             borderRadius: BorderRadius.circular(3)),
                         child: Text(

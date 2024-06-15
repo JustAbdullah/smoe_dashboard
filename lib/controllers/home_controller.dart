@@ -9,10 +9,17 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart';
 import 'package:smoe_dashboard/views/AdminView/admin_view.dart';
 import 'package:smoe_dashboard/views/MainTypes/view_main_types.dart';
 import 'package:smoe_dashboard/views/Products/view_products.dart';
 
+import '../core/data/model/admin.dart';
+import '../core/data/model/list_of_order.dart';
+import '../core/data/model/maintype.dart';
+import '../core/data/model/offers.dart';
+import '../core/data/model/products.dart';
+import '../core/data/model/users.dart';
 import '../core/services/appservices.dart';
 import '../linksapi.dart';
 // ignore: library_prefixes
@@ -22,6 +29,7 @@ import 'package:path/path.dart' as Path;
 import 'dart:io';
 
 import '../views/Accounts/account_services_man.dart';
+import '../views/Home/home_screen.dart';
 import '../views/InvVeiw/inv_view.dart';
 import '../views/Notice/notice_view.dart';
 import '../views/NoticeServicesMan/notice_view_services.dart';
@@ -31,6 +39,7 @@ import '../views/ServicesMan/view_services_man.dart';
 import '../views/offers/offer_view.dart';
 import '../views/UsersScreen/view_users.dart';
 import '../views/WalletView/view_wallte.dart';
+import 'dart:html' as html;
 
 class HomeController extends GetxController {
   final crud = Crud();
@@ -38,44 +47,59 @@ class HomeController extends GetxController {
 
 ///////////////////Get Data From DataBase ,,,,,,,,,,////////////////////
 
-  getDataUsersFromDatabase() async {
-    var response = await crud.postRequest(AppLinksApi.getUsers, {});
+  Future<List<Users>> getDataUsersFromDatabase() async {
+    final response = await http.get(Uri.parse(AppLinksApi.getUsers));
 
-    if (response['status'] == "success") {
-    } else {}
-    return response;
+    if (response.statusCode == 200) {
+      List<dynamic> UsersJson = json.decode(response.body)['data'];
+      return UsersJson.map((json) => Users.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load user');
+    }
   }
 
-  getDataMainTypesDatabase() async {
-    var response = await crud.postRequest(AppLinksApi.getMainTypes, {});
+  Future<List<maintype>> getDataMainTypesDatabase() async {
+    final response = await http.get(Uri.parse(AppLinksApi.getMainTypes));
 
-    if (response['status'] == "success") {
-    } else {}
-    return response;
+    if (response.statusCode == 200) {
+      List<dynamic> MaintypeJson = json.decode(response.body)['data'];
+      return MaintypeJson.map((json) => maintype.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load mainType');
+    }
   }
 
-  getDataSubTypesDatabase() async {
-    var response = await crud.postRequest(AppLinksApi.getProducts, {});
+  Future<List<Products>> getDataProductsDatabase() async {
+    final response = await http.get(Uri.parse(AppLinksApi.getProducts));
 
-    if (response['status'] == "success") {
-    } else {}
-    return response;
+    if (response.statusCode == 200) {
+      List<dynamic> ProductsJson = json.decode(response.body)['data'];
+      return ProductsJson.map((json) => Products.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load Products');
+    }
   }
 
-  getDataOffersFromDatabase() async {
-    var response = await crud.postRequest(AppLinksApi.getOffers, {});
+  Future<List<offers>> getDataOffersFromDatabase() async {
+    final response = await http.get(Uri.parse(AppLinksApi.getOffers));
 
-    if (response['status'] == "success") {
-    } else {}
-    return response;
+    if (response.statusCode == 200) {
+      List<dynamic> offersJson = json.decode(response.body)['data'];
+      return offersJson.map((json) => offers.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load Offers');
+    }
   }
 
-  getDataAdminDatabase() async {
-    var response = await crud.postRequest(AppLinksApi.getAdminsData, {});
+  Future<List<Admin>> getDataAdminDatabase() async {
+    final response = await http.get(Uri.parse(AppLinksApi.getAdminsData));
 
-    if (response['status'] == "success") {
-    } else {}
-    return response;
+    if (response.statusCode == 200) {
+      List<dynamic> AdminJson = json.decode(response.body)['data'];
+      return AdminJson.map((json) => Admin.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load Admin');
+    }
   }
 
   getDataNoticeDatabase() async {
@@ -102,6 +126,19 @@ class HomeController extends GetxController {
     } else {}
     return response;
   }
+
+  ///////////////////////get The  Orders............................./////////////
+
+  Future<List<Order>> fetchOrders() async {
+    final response = await http.get(Uri.parse(AppLinksApi.getAllOrder));
+
+    if (response.statusCode == 200) {
+      List<dynamic> ordersJson = json.decode(response.body)['data'];
+      return ordersJson.map((json) => Order.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load orders');
+    }
+  }
   //////..............ONInit............................////////////////
 
   @override
@@ -113,7 +150,13 @@ class HomeController extends GetxController {
 
   //////////////Nav The Pages........//////////
 
-  RxInt countTheMenu = 2.obs;
+  RxInt countTheMenu = 0.obs;
+  GoToHomeScreen() {
+    showMore.value = false;
+    Get.to(HomeScreen());
+    searchingClearWhenMove();
+    countTheMenu.value = 0;
+  }
 
   GoToAdminScreen() {
     showMore.value = false;
@@ -260,73 +303,25 @@ class HomeController extends GetxController {
     }
   }
 
-  /////////////////Add .......///////////
+//////////###############################################################################################################///////////
+//////////###############################################################################################################///////////
+//////////###############################################################################################################///////////
+//////////###############################################################################################################///////////
 
-  ///////////////////////////////Add Image///////////////////
-  upIm(File? mfile) async {
-    // ignore: unused_local_variable
-    var response =
-        await crud.postRequestFile(AppLinksApi.uploadimage, {}, mfile!);
-  }
-
-  upnew(File? mfile) async {
-    // ignore: unused_local_variable
-    var response = await crud.postRequestFile(AppLinksApi.imageNew, {}, mfile!);
-  }
-
-  RxBool addImageWork = false.obs;
-  RxBool loadingImage = false.obs;
-  File? imagePickerOne;
-  String urlImageOne = "0";
-  final ImagePicker pickerOne = ImagePicker();
-  Uint8List webImageOne = Uint8List(8);
-  chooseImageOne() async {
-    loadingImage.value = true;
-    addImageWork.value = false;
-    XFile? image = await pickerOne.pickImage(source: ImageSource.gallery);
-    if (kIsWeb) {
-      imagePickerOne = File('a');
-
-      var f = await image!.readAsBytes();
-
-      webImageOne = f;
-
-      upIm(imagePickerOne);
-
-      Reference _reference =
-          FirebaseStorage.instance.ref().child('${Path.basename(image.path)}');
-      await _reference
-          .putData(
-        await image.readAsBytes(),
-        SettableMetadata(contentType: 'image/jpeg'),
-      )
-          .whenComplete(() async {
-        await _reference.getDownloadURL().then((value) {
-          addImageWork.value = true;
-          addImageWork.value = true;
-          urlImageOne = value;
-          loadingImage.value = false;
-          iconEditMainType = value;
-          iconEditSubType = value;
-        });
-      });
-    }
-  }
-///////////////////........ All Add.......//////////
+///////////////////....................................The Controller Add OR Edit .......//////////
 
   TextEditingController controllerOne = TextEditingController();
   TextEditingController controllerTwo = TextEditingController();
   TextEditingController controllerThree = TextEditingController();
   TextEditingController controllerFour = TextEditingController();
   TextEditingController controllerFive = TextEditingController();
-
   RxBool addToDataBase = false.obs;
   RxBool isAddData = false.obs;
   RxBool isErrorToAddData = false.obs;
-  //////MainTypes......./
+  //////..............................................................MainTypes Of Database....................../
   RxBool showTheListOfMainType = false.obs;
   RxString nameOfMainType = "لم يتم الاختيار".obs;
-  String idTheMainType = "";
+  int idTheMainType = 0;
 
   //////SubTypes......./
   RxBool showTheListOfSubType = false.obs;
@@ -342,143 +337,217 @@ class HomeController extends GetxController {
     addToDataBase.value = false;
     isAddData.value = false;
     isErrorToAddData.value = false;
-    addImageWork.value = false;
-    loadingImage.value = false;
-    urlImageOne = "0";
     typeOFAdmin.value = 0;
     nameOfMainType.value = "لم يتم الاختيار";
     nameOfSubType.value = "لم يتم الاختيار";
+
+    update();
   }
 
 /////////////.........MainType.................///////
   String nameOFTypeMain = "";
   String nameEnglishTypeMain = "";
-  addNewMainType(String nameArType, String nameTypeEn, String imageUrl) async {
+  String ImageTypeMain = "";
+
+  Future<void> addMainType(
+      String nameArType, String nameTypeEn, String imageUrl) async {
     addToDataBase.value = true;
-    var response = await crud.postRequest(AppLinksApi.addMainType, {
-      "type_name_ar": nameArType.toString(),
-      "type_name_en": nameTypeEn.toString(),
-      "type_image": imageUrl.toString(),
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
+    update();
+    final url = Uri.parse(AppLinksApi.addMainType);
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'type_name_ar': nameArType,
+        'type_name_en': nameTypeEn,
+        'type_image':
+            "https://larra.xyz/lar_testing/flanjo/storage/images/$imageUrl"
+                .toString(),
+      }),
+    );
+
+    if (response.statusCode == 200) {
       addToDataBase.value = false;
       isAddData.value = true;
-    });
+      update();
+      // إذا كان الطلب ناجحًا، قم بمعالجة البيانات هنا
+      print('MainType added successfully');
+    } else {
+      isErrorToAddData.value = true;
+      update();
+      // إذا فشل الطلب، قم بمعالجة الخطأ هنا
+      print('Failed to add MainType');
+    }
+    addToDataBase.value = false;
 
-    return response;
+    update();
   }
 
-  //////////////////......................SubType.............................///////////////
+  //////////////////.................................SubType  Like Products.............................///////////////
   String nameOFSubMain = "";
   String nameEnglishTypeSub = "";
   String DescriptionSubTypeAr = "";
   String DescriptionSubTypeEn = "";
-  String price = "";
+  int price = 0;
 
-  addProducts(
-      String idTypeMain,
+  Future<void> addProduct(
+      int idTypeMain,
       String nameArType,
       String nameTypeEn,
       String DescriptionAr,
       String DescriptionEn,
       String imageUrl,
-      String price) async {
+      int price) async {
     addToDataBase.value = true;
-    var response = await crud.postRequest(AppLinksApi.addProudcts, {
-      "prooduct_type": idTypeMain.toString(),
-      "prooduct_name_ar": nameArType.toString(),
-      "prooduct_name_en": nameTypeEn.toString(),
-      "prooduct_description_ar": DescriptionAr.toString(),
-      "prooduct_description_en": DescriptionEn.toString(),
-      "products_image": imageUrl.toString(),
-      "products_price": price.toString(),
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
+    update();
+    final response = await http.post(
+      Uri.parse(AppLinksApi.addProudcts), // استبدل برابط الخادم الخاص بك
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "prooduct_type": idTypeMain as int,
+        "prooduct_name_ar": nameArType.toString(),
+        "prooduct_name_en": nameTypeEn.toString(),
+        "prooduct_description_ar": DescriptionAr.toString(),
+        "prooduct_description_en": DescriptionEn.toString(),
+        "products_image":
+            'https://larra.xyz/lar_testing/flanjo/storage/images/${imageUrl.toString()}',
+        "products_price": price as int,
+      }),
+    );
+
+    if (response.statusCode == 200) {
       addToDataBase.value = false;
       isAddData.value = true;
-    });
+      update();
+      // إذا كان الخادم يرد برمز الحالة 200 OK ، فقد تمت العملية بنجاح
+      print('product added successfully');
+    } else {
+      isErrorToAddData.value = true;
+      update();
+      // إذا كان الرد غير 200 OK ، فإن الطلب فشل
+      print('Failed to add offer');
+    }
+    addToDataBase.value = false;
+    update();
+  }
 
-    return response;
-  } //////////////////......................TypeOfSubType.............................///////////////
+  //////////////////......................TypeOfSubType  Like SubType Of Products.............................///////////////
 
+////////////////////////////////////...................Offers..............////////
   String nameOffer = "";
   String DescriptionOfOffer = "";
-  String priceOffers = "";
+  int priceOffers = 0;
   String imageOffer = "";
 
-  addNewOffer(
-      String nam, String Description, String Theprice, String Theimage) async {
+  Future<void> addOffer(String offerName, String offerAbout, String offerImage,
+      int offerPrice) async {
     addToDataBase.value = true;
-    var response = await crud.postRequest(AppLinksApi.addOffer, {
-      "offer_name": nam.toString(),
-      "offer_about": Description.toString(),
-      "offer_image": Theprice.toString(),
-      "offer_price": Theimage.toString(),
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
+    final response = await http.post(
+      Uri.parse(AppLinksApi.addOffer), // استبدل برابط الخادم الخاص بك
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'offer_name': offerName,
+        'offer_about': offerAbout,
+        'offer_image':
+            'https://larra.xyz/lar_testing/flanjo/storage/images/${offerImage.toString()}',
+        'offer_price': offerPrice, // تحويل السعر إلى نص
+        'offer_name_en': 'lll',
+        'offer_about_en': 'lkl',
+      }),
+    );
+
+    if (response.statusCode == 200) {
       addToDataBase.value = false;
       isAddData.value = true;
-    });
-
-    return response;
+      update();
+      // إذا كان الخادم يرد برمز الحالة 200 OK ، فقد تمت العملية بنجاح
+      print('Offer added successfully');
+    } else {
+      isErrorToAddData.value = true;
+      update();
+      // إذا كان الرد غير 200 OK ، فإن الطلب فشل
+      print('Failed to add offer');
+    }
+    addToDataBase.value = false;
+    update();
   }
 
   /////////////////////Delete And Edit///////////
-  ////////////Main Types............/
-  String ofIdMainTypeDeleteOrEdit = "";
+  ////////////###########################Main Types............/
+  int ofIdMainTypeDeleteOrEdit = 0;
   int isChooseEditMainType = 0;
-  deleteMainType(String idOFMainType) async {
-    var response = await crud.postRequest(
-        AppLinksApi.deleteMainType, {"type_id": idOFMainType.toString()});
 
-    showMore.value = false;
-    Get.offAll(ViewMainTypes());
+  Future<void> deleteMainType(String idOFMainType) async {
+    var url =
+        Uri.parse(AppLinksApi.deleteMainType); // استبدل برابط ال API الخاص بك
+    var response =
+        await http.post(url, body: {'type_id': idOFMainType.toString()});
 
-    return response;
+    if (response.statusCode == 200) {
+      showMore.value = false;
+      Get.offAll(ViewMainTypes());
+    } else {
+      showMore.value = false;
+    }
   }
 
-  ////////////Sub Types............/
+  ////////////#################Sub Types Like Products............/
   String ofIdSubTypeDeleteOrEdit = "";
   int isChooseEditSubType = 0;
-  deleteProducs(String idOFSubType) async {
-    var response = await crud.postRequest(
-        AppLinksApi.deleteProducts, {"prooduct_id": idOFSubType.toString()});
-    showMore.value = false;
-    Get.offAll(ProductsView());
 
-    return response;
-  } //////////// Tpee Of Sub Types............/
+  Future<void> deleteProducs(String idOFSubType) async {
+    var url =
+        Uri.parse(AppLinksApi.deleteProducts); // استبدل برابط ال API الخاص بك
+    var response =
+        await http.post(url, body: {'prooduct_id': idOFSubType.toString()});
 
-  String ofIdTypeSubTypeDeleteOrEdit = "";
-  deleteOffer(String idOFTypeSubType) async {
-    var response = await crud.postRequest(
-        AppLinksApi.deleteOffer, {"offer_id": idOFTypeSubType.toString()});
-    showMore.value = false;
-    Get.offAll(ViewOffers());
+    if (response.statusCode == 200) {
+      showMore.value = false;
+      Get.offAll(ProductsView());
+    } else {
+      showMore.value = false;
+    }
+  }
 
-    return response;
+  //////////// Delete Of Sub Types............/
+  int ofIdTypeSubTypeDeleteOrEdit = 0;
+
+////////////////////////////////////Offers
+
+  Future<void> deleteOffer(String idOFTypeSubType) async {
+    var url =
+        Uri.parse(AppLinksApi.deleteOffer); // استبدل برابط ال API الخاص بك
+    var response =
+        await http.post(url, body: {'offer_id': idOFTypeSubType.toString()});
+
+    if (response.statusCode == 200) {
+      showMore.value = false;
+      Get.offAll(ViewOffers());
+    } else {
+      showMore.value = false;
+    }
   }
 
 //////////Delete Admin..........///////////
-  deleteAdmin(String idOFAdmin) async {
-    var response = await crud.postRequest(
-        AppLinksApi.deleteAdmin, {"admin_id": idOFAdmin.toString()});
 
-    showMore.value = false;
-    Get.offAll(ViewAdmin());
+  Future<void> deleteAdmin(String idOFAdmin) async {
+    var url =
+        Uri.parse(AppLinksApi.deleteAdmin); // استبدل برابط ال API الخاص بك
+    var response =
+        await http.post(url, body: {'admin_id': idOFAdmin.toString()});
 
-    return response;
-  }
-
-//////////Delete Admin..........///////////
-  deleteServiceMan(String idOFMan) async {
-    var response = await crud
-        .postRequest(AppLinksApi.deleteServiceMan, {"id": idOFMan.toString()});
-
-    showMore.value = false;
-    Get.offAll(ViewServicesMan());
-
-    return response;
+    if (response.statusCode == 200) {
+      showMore.value = false;
+      Get.offAll(ViewAdmin());
+    } else {
+      showMore.value = false;
+    }
   }
 
   ////////////////////////Login Admin........../////////////
@@ -504,7 +573,7 @@ class HomeController extends GetxController {
       idOfAdmin.value = response['data'][0]['admin_id'].toString();
       waitLoadingAdmin.value = false;
       clearTheData();
-      Get.to(ViewUsers());
+      Get.to(HomeScreen());
     } else {
       isErrorAboutLoginAdmin.value = true;
     }
@@ -516,14 +585,29 @@ class HomeController extends GetxController {
   String passwordOFNewAdmin = "";
   RxInt typeOFAdmin = 0.obs;
 
-  AddAdmin(String name, String password, int type) async {
-    var response = await crud.postRequest(AppLinksApi.addAdminNew, {
-      'admin_name': nameOfNewAdmin.toString(),
-      'admin_password': passwordOFNewAdmin.toString(),
-      'admin_type': type.toString(),
-    });
+  Future<void> addAdmin(
+      String adminName, String adminPassword, int adminType) async {
+    final url =
+        Uri.parse(AppLinksApi.addAdminNew); // استبدل بنقطة النهاية الخاصة بAPI
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'admin_name': adminName,
+        'admin_password': adminPassword,
+        'admin_type': adminType.toString(),
+      }),
+    );
 
-    return response;
+    if (response.statusCode == 200) {
+      // إذا كان الطلب ناجحًا، قم بمعالجة البيانات هنا
+      print('Admin added successfully');
+    } else {
+      // إذا فشل الطلب، قم بمعالجة الخطأ هنا
+      print('Failed to add admin-----------------------');
+    }
   }
 
   //////////////////////////...................Add Notice..................../////////////
@@ -593,13 +677,6 @@ class HomeController extends GetxController {
     return response;
   }
 
-  ///////////////////////get The  Orders............................./////////////
-  getOrders() async {
-    var response = await crud.postRequest(AppLinksApi.getUserOrder, {});
-
-    return response;
-  }
-
   ////////////////Edit The Main Sub And SubType And Service Man................,,,,,,
   /////////Edit MAIN...........////////
 
@@ -608,79 +685,179 @@ class HomeController extends GetxController {
   String nameEnEditMainType = "";
   String iconEditMainType = "";
 
-  editMainType(String idMainType, String nameArMainType, String nameEnMainType,
-      String iconMainType) async {
+  Future<void> editMainType(String idMainType, String nameArMainType,
+      String nameEnMainType, String iconMainType) async {
     addToDataBase.value = true;
-    var response = await crud.postRequest(AppLinksApi.EditMainType, {
-      "type_id": idMainType.toString(),
-      "type_name_ar": nameArMainType.toString(),
-      "type_name_en": nameEnMainType.toString(),
-      "type_image": iconMainType.toString(),
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
+    final url =
+        Uri.parse(AppLinksApi.EditMainType); // استبدل بنقطة نهاية API الخاصة بك
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        "type_id": idMainType,
+        "type_name_ar": nameArMainType.toString(),
+        "type_name_en": nameEnMainType.toString(),
+        "type_image":
+            'https://larra.xyz/lar_testing/flanjo/storage/images/${iconMainType.toString()}'
+                .toString(),
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+      if (responseBody['status'] == 'success') {
+        print('تم تحديث البيانات بنجاح');
+        addToDataBase.value = false;
+        isAddData.value = true;
+        update();
+      } else {
+        print('فشل في تحديث البيانات');
+        addToDataBase.value = false;
+
+        update();
+      }
+    } else {
       addToDataBase.value = false;
-      isAddData.value = true;
-    });
 
-    return response;
-  } /////////Edit Sub...........////////
-
-  String idMainSubTypeEdit = "";
-  String idSubTypeEdit = "";
-  String nameArEditSubType = "";
-  String nameEnEditSubType = "";
-  String iconEditSubType = "";
-  String sub_type_description_ar = "";
-  String sub_type_description_en = "";
-
-  editProducts(String idMainType, String nameArType, String nameEnType,
-      String dArType, String dEnType, String iconType, String typeSubID) async {
-    addToDataBase.value = true;
-    var response = await crud.postRequest(AppLinksApi.EditProducts, {
-      "prooduct_type": idMainType.toString(),
-      "prooduct_name_ar": nameArType.toString(),
-      "prooduct_name_en": nameEnType.toString(),
-      "prooduct_description_ar": dArType.toString(),
-      "prooduct_description_en": dEnType.toString(),
-      "products_image": iconType.toString(),
-      "prooduct_id": typeSubID.toString(),
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
-      addToDataBase.value = false;
-      isAddData.value = true;
-    });
-
-    return response;
+      update();
+      print('حدث خطأ في الاتصال بالخادم');
+    }
   }
 
-  //////////### Edit the type Of SubType ...............//////////////////
+  /////////Edit Sub...........////////
+
+  int idProductsEdit = 0;
+  int idMainTypeEditInProduct = 0;
+  String nameArEditProduct = "";
+  String nameEnEditProduct = "";
+  String iconProducEdit = "";
+  String EditProductdescriptionAr = "";
+  String EditProductdescriptionEn = "";
+  int EditPriceProduct = 0;
+
+  Future<void> updateProduct(
+      int productId,
+      int idTypeMain,
+      String nameArType,
+      String nameTypeEn,
+      String DescriptionAr,
+      String DescriptionEn,
+      String imageUrl,
+      int price) async {
+    final url = Uri.parse(AppLinksApi.editProduct);
+
+    addToDataBase.value = true; // استبدل بنقطة نهاية API الخاصة بك
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        'prooduct_id': productId,
+        "prooduct_type": idTypeMain,
+        "prooduct_name_ar": nameArType.toString(),
+        "prooduct_name_en": nameTypeEn.toString(),
+        "prooduct_description_ar": DescriptionAr.toString(),
+        "prooduct_description_en": DescriptionEn.toString(),
+        "products_image":
+            'https://larra.xyz/lar_testing/flanjo/storage/images/${imageUrl.toString()}',
+        "products_price": price,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+      if (responseBody['status'] == 'success') {
+        print('تم تحديث البيانات بنجاح');
+        addToDataBase.value = false;
+        isAddData.value = true;
+        update();
+      } else {
+        print('فشل في تحديث البيانات');
+        addToDataBase.value = false;
+
+        update();
+      }
+    } else {
+      addToDataBase.value = false;
+
+      update();
+      print('حدث خطأ في الاتصال بالخادم');
+    }
+  }
+
+  //////////### Edit the type Of SubType And Offfers ...............//////////////////
   int isChooseEditTypeSubType = 0;
 
-  String idTypeOFSubType = "";
+  int idTypeOFSubType = 0;
   String IdSubType = "";
   String nameTypeSubTypeAr = "";
   String nameTypeSubTypeEn = "";
   String AboutTypeSubTypeAr = "";
   String AboutTypeSubTypeEn = "";
-  String PriceTypeOfSubType = "";
+  String AboutImageSubType = "";
 
-  editOffers(String idOffers, String name, String about, String image,
-      String price) async {
+  int PriceTypeOfSubType = 0;
+
+///////////////############################## Edit the  Offfers/////////////
+  int isChooseEditTEditOffers = 0;
+
+  int idEditOffers = 0;
+
+  String nameEditOfferAr = "";
+  String nameEditOfferEn = "";
+  String AboutEditOfferAr = "";
+  String AboutEditOfferEn = "";
+  String ImageEditOfferAr = "";
+  int PriceOfferEdit = 0;
+
+  Future<void> updateOffers(
+      int idOffers, String name, String about, String image, int price) async {
     addToDataBase.value = true;
-    var response = await crud.postRequest(AppLinksApi.EditOffers, {
-      "offer_id": idOffers.toString(),
-      "offer_name": name.toString(),
-      "offer_about": about.toString(),
-      "offer_image": image.toString(),
-      "offer_price": price.toString(),
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
-      addToDataBase.value = false;
-      isAddData.value = true;
-    });
+    final url =
+        Uri.parse(AppLinksApi.EditOffers); // استبدل بنقطة نهاية API الخاصة بك
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        "offer_id": idOffers,
+        "offer_name": name.toString(),
+        "offer_about": about.toString(),
+        "offer_image":
+            'https://larra.xyz/lar_testing/flanjo/storage/images/${image.toString()}',
+        "offer_price": price
+      }),
+    );
 
-    return response;
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+      if (responseBody['status'] == 'success') {
+        print('تم تحديث البيانات بنجاح');
+        addToDataBase.value = false;
+        isAddData.value = true;
+        update();
+      } else {
+        print('فشل في تحديث البيانات');
+        addToDataBase.value = false;
+
+        update();
+      }
+    } else {
+      addToDataBase.value = false;
+
+      update();
+      print('حدث خطأ في الاتصال بالخادم');
+    }
   }
+
+  ////////////////////////
 
   //////////### Edit the Service Man ...............//////////////////
   int isChooseEditServiceMan = 0;
@@ -716,30 +893,41 @@ class HomeController extends GetxController {
 
   int isChooseEditAdmin = 0;
 
-  String idAdminEdit = "";
+  int idAdminEdit = 0;
   String nameAdminEdit = "";
   String passwordAdminEdit = "";
   int typeOfAccessEditAdmin = 0;
 
-  editAdmin(
-    String id,
-    String name,
-    String password,
-    String type,
-  ) async {
-    addToDataBase.value = true;
-    var response = await crud.postRequest(AppLinksApi.EditTheAdmin, {
-      "admin_id": id.toString(),
-      "admin_name": name.toString(),
-      "admin_password": password.toString(),
-      "admin_type": type.toString(),
-    });
-    Future.delayed(const Duration(seconds: 2), () async {
-      addToDataBase.value = false;
-      isAddData.value = true;
-    });
+  Future<void> updateAdmin(int adminId, String adminName, String adminPassword,
+      int adminType) async {
+    final url =
+        Uri.parse(AppLinksApi.EditTheAdmin); // استبدل بنقطة نهاية API الخاصة بك
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        'admin_id': adminId,
+        'admin_name': adminName,
+        'admin_password': adminPassword,
+        'admin_type': adminType,
+      }),
+    );
 
-    return response;
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+      if (responseBody['status'] == 'success') {
+        print('تم تحديث البيانات بنجاح');
+        isAddData.value = true;
+        update();
+      } else {
+        print('فشل في تحديث البيانات');
+      }
+    } else {
+      print('حدث خطأ في الاتصال بالخادم');
+    }
   }
 
   ///////////////////////######################################Searching .............//////////////
@@ -791,21 +979,34 @@ class HomeController extends GetxController {
 
     return response;
   }
+
   ////////////User//////////////
+  List<Users> searchResults = [];
+  Future<List<Users>> searchinfUserName(String name) async {
+    final response = await http.get(
+      Uri.parse('${AppLinksApi.searchingUserName}?search=$name'),
+      headers: {},
+    );
 
-  searchinfUserName(String name) async {
-    var response = await crud.postRequest(AppLinksApi.searchingUserName, {
-      'search': name.toString(),
-    });
-///////
-    if (response['status'] == "success") {
-      noDataSearching.value = true;
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['status'] == 'success') {
+        noDataSearching.value = true;
+        // تأكد من أن الدالة fromJson تعيد كائن من نوع Users
+        searchResults = (data['data'] as List)
+            .map((e) => Users.fromJson(e))
+            .cast<Users>()
+            .toList();
+      } else {
+        noDataSearching.value = false;
+        // Handle the case where the search did not return any results
+      }
     } else {
-      noDataSearching.value = false;
+      // Handle other status codes
     }
-
-    return response;
-  } ////////////Main//////////////
+    return searchResults; // تأكد من إرجاع القائمة من النوع الصحيح
+  }
+  ////////////Main//////////////
 
   searchinMainName(String name) async {
     var response = await crud.postRequest(AppLinksApi.searchingMainTypeName, {
@@ -876,4 +1077,75 @@ class HomeController extends GetxController {
 
     return response;
   }
+
+  RxBool isUploadImage = false.obs;
+  ///////////////////////////////////////////
+  Uint8List? imageBytes;
+  String imageName = "";
+
+  ChangeWhenEditMainTypeSubTypeProductType() {}
+  // دالة لاختيار الصورة وعرضها
+
+// دالة لاختيار الصورة وعرضها
+  void chooseAndDisplayImage() {
+    EditImage = 1;
+    final html.FileUploadInputElement input = html.FileUploadInputElement()
+      ..accept = 'image/*';
+    input.click();
+    input.onChange.listen((event) {
+      final html.File file = input.files!.first;
+      final reader = html.FileReader();
+      reader.onLoadEnd.listen((event) {
+        imageBytes = reader.result as Uint8List;
+        imageName = file.name;
+        isUploadImage.value = true;
+        var rng = Random();
+        imageName = '${rng.nextInt(1000000)}.png';
+
+        update(); // إضافة هذا السطر لتحديث الواجهة
+
+        ////ChangeWhenEditMainTypeSubTypeProductType
+        ImageEditOfferAr = imageName;
+        iconEditMainType = imageName;
+        iconProducEdit = imageName;
+      });
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+// دالة لرفع الصورة إلى السيرفر
+  Future<void> uploadImageToServer() async {
+    if (imageBytes != null && imageName != null) {
+      try {
+        final uri = Uri.parse(
+            'https://larra.xyz/lar_testing/flanjo/public/upload-endpoint');
+        final request = http.MultipartRequest('POST', uri)
+          ..files.add(http.MultipartFile.fromBytes('image', imageBytes!,
+              filename: imageName));
+        final streamedResponse = await request.send();
+        final response = await http.Response.fromStream(streamedResponse);
+
+        if (response.statusCode == 200) {
+          // إذا كان الطلب ناجحًا، قم بمعالجة البيانات هنا
+          print('Image uploaded successfully');
+          isUploadImage.value = false;
+          // تصفير التعديلات
+          ImageEditOfferAr = "";
+          iconEditMainType = "";
+          iconProducEdit = "";
+
+          EditImage = 0;
+        } else {
+          // إذا فشل الطلب، قم بمعالجة الخطأ هنا
+          print('Failed to upload image');
+        }
+      } catch (e) {
+        print('Exception caught: $e');
+      }
+    }
+  }
+
+  ///////////////When Edit The Image Upload In Database...............//////
+
+  int EditImage = 0;
 }

@@ -8,13 +8,15 @@ import '../../../core/constant/appcolors.dart';
 import '../../../customWidgets/custom_padding.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../core/data/model/maintype.dart';
+
 class ListOfMainTypes extends StatelessWidget {
   const ListOfMainTypes({super.key});
 
   @override
   Widget build(BuildContext context) {
     HomeController homeController = Get.put(HomeController());
-    return FutureBuilder(
+    return FutureBuilder<List<maintype>>(
         future: homeController.getDataMainTypesDatabase(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
@@ -23,10 +25,12 @@ class ListOfMainTypes extends StatelessWidget {
               height: MediaQuery.sizeOf(context).height,
               color: AppColors.whiteColorTypeTwo,
               child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: snapshot.data['data'].length,
                   shrinkWrap: true,
-                  itemBuilder: (context, i) {
+                  scrollDirection: Axis.vertical,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    maintype mainType = snapshot.data![index];
+
                     return PaddingCustom(
                         theBottom: 10,
                         theLeft: 0,
@@ -38,20 +42,14 @@ class ListOfMainTypes extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               child: InkWell(
                                 onTap: () {
-                                  homeController.nameOfMainType.value = snapshot
-                                      .data['data'][i]['services_main_name_ar']
-                                      .toString();
-                                  homeController.idTheMainType = snapshot
-                                      .data['data'][i]['services_main_id']
-                                      .toString();
+                                  homeController.nameOfMainType.value =
+                                      mainType.name.toString();
 
-                                  homeController.idMainSubTypeEdit = snapshot
-                                      .data['data'][i]['services_main_id']
-                                      .toString();
+                                  homeController.idTheMainType = mainType.id;
 
-                                  homeController.idSerivceJobEdit = snapshot
-                                      .data['data'][i]['services_main_id']
-                                      .toString();
+                                  homeController.idMainTypeEditInProduct =
+                                      mainType.id;
+
                                   homeController.showTheListOfMainType.value =
                                       false;
                                 },
@@ -62,8 +60,7 @@ class ListOfMainTypes extends StatelessWidget {
                                     padding: EdgeInsets.symmetric(
                                         vertical: 1.h, horizontal: 1.w),
                                     child: Text(
-                                      snapshot.data['data'][i]
-                                          ['services_main_name_ar'],
+                                      mainType.name.toString(),
                                       style: TextStyle(
                                         height: 1,
                                         color: AppColors.blackColor,

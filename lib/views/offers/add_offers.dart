@@ -14,7 +14,6 @@ import '../../../customWidgets/custom_container_api.dart';
 import '../../../customWidgets/custom_padding.dart';
 import '../../../customWidgets/custom_text.dart';
 import '../../responsive_screen.dart';
-import '../chooseFromAPi/list_of_types_sub_types.dart';
 import '../menu/menu.dart';
 
 class AddNewOffers extends StatefulWidget {
@@ -52,7 +51,7 @@ class _AddNewOffersState extends State<AddNewOffers> {
                               alignment: Alignment.topCenter,
                               child: TextCustom(
                                   height: 1.5.h,
-                                  theText: "صفحة إضافة-تعديل العروض ",
+                                  theText: "صفحة إضافة-تعديل العروض",
                                   fontSizeWidth: 7.sp,
                                   fontFamily: AppTextStyles.Almarai,
                                   fontColor: AppColors.blackColor),
@@ -65,7 +64,7 @@ class _AddNewOffersState extends State<AddNewOffers> {
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 50.w),
                                 child: Text(
-                                  "لطفًا قم بإدخال البيانات لإضافة-تعديل  العروض   ",
+                                  "لطفًا قم بإدخال البيانات لإضافة-تعديل  العروض",
                                   style: TextStyle(
                                       height: 1.5.h,
                                       fontSize: 5.sp,
@@ -90,13 +89,13 @@ class _AddNewOffersState extends State<AddNewOffers> {
                                     child: TextFormField(
                                       onChanged: (value) {
                                         homeController.nameOffer = value;
-                                        homeController.nameTypeSubTypeAr =
+                                        homeController.nameEditOfferAr =
                                             value.toString();
                                       },
                                       onSaved: (newValue) {
                                         homeController.nameOffer =
                                             newValue.toString();
-                                        homeController.nameTypeSubTypeAr =
+                                        homeController.nameEditOfferAr =
                                             newValue.toString();
                                       },
                                       controller: homeController.controllerOne,
@@ -142,13 +141,12 @@ class _AddNewOffersState extends State<AddNewOffers> {
                                       onChanged: (value) {
                                         homeController.DescriptionOfOffer =
                                             value;
-                                        homeController.nameTypeSubTypeEn =
-                                            value;
+                                        homeController.AboutEditOfferAr = value;
                                       },
                                       onSaved: (newValue) {
                                         homeController.DescriptionOfOffer =
                                             newValue.toString();
-                                        homeController.nameTypeSubTypeEn =
+                                        homeController.AboutEditOfferAr =
                                             newValue.toString();
                                       },
                                       keyboardType: TextInputType.text,
@@ -192,15 +190,16 @@ class _AddNewOffersState extends State<AddNewOffers> {
                                       controller:
                                           homeController.controllerThree,
                                       onChanged: (value) {
-                                        homeController.priceOffers = value;
-                                        homeController.AboutTypeSubTypeAr =
-                                            value;
+                                        homeController.priceOffers =
+                                            int.parse(value.toString());
+                                        homeController.PriceOfferEdit =
+                                            int.parse(value.toString());
                                       },
                                       onSaved: (newValue) {
                                         homeController.priceOffers =
-                                            newValue.toString();
-                                        homeController.AboutTypeSubTypeAr =
-                                            newValue.toString();
+                                            int.parse(newValue.toString());
+                                        homeController.PriceOfferEdit =
+                                            int.parse(newValue.toString());
                                       },
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
@@ -228,6 +227,62 @@ class _AddNewOffersState extends State<AddNewOffers> {
                                   ),
                                 )),
                             SizedBox(
+                              height: 17.h,
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            InkWell(
+                                onTap: () async {
+                                  homeController.chooseAndDisplayImage();
+                                },
+                                child: Container(
+                                  width: 70.w,
+                                  height: 80.h,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.cyan[600]),
+                                  child: Center(
+                                    child: TextCustom(
+                                        height: 1.5.h,
+                                        theText: "اختيار صورة:",
+                                        fontSizeWidth: 5.sp,
+                                        fontFamily: AppTextStyles.Almarai,
+                                        fontColor: AppColors.whiteColor),
+                                  ),
+                                )),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            GetX<HomeController>(
+                                builder: (controller) => Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        if (controller.isUploadImage.value ==
+                                            true)
+                                          Image.memory(
+                                            controller.imageBytes!,
+                                            width: 100.w, // عرض الصورة
+                                            height: 200.h, // ارتفاع الصورة
+                                            fit: BoxFit
+                                                .cover, // ضبط الصورة لتغطية الحجم المحدد
+                                          )
+                                        else
+                                          TextCustom(
+                                              height: 1.5.h,
+                                              theText: "لم يتم إختيار اي صورة",
+                                              fontSizeWidth: 5.sp,
+                                              fontFamily: AppTextStyles.Almarai,
+                                              fontColor: AppColors.redColor),
+                                      ],
+                                    )),
+                            SizedBox(
+                              height: 40.h,
+                            ),
+                            SizedBox(
                               height: 30.h,
                             ),
                             Row(
@@ -237,25 +292,28 @@ class _AddNewOffersState extends State<AddNewOffers> {
                                 InkWell(
                                   onTap: () {
                                     if (homeController
-                                            .isChooseEditTypeSubType ==
+                                            .isChooseEditTEditOffers ==
                                         1) {
-                                      homeController.editOffers(
+                                      if (homeController.EditImage == 1) {
+                                        homeController.uploadImageToServer();
+                                      }
+                                      homeController.updateOffers(
+                                        homeController.idEditOffers,
+                                        homeController.nameEditOfferAr,
+                                        homeController.AboutEditOfferAr,
                                         homeController
-                                            .ofIdTypeSubTypeDeleteOrEdit,
-                                        homeController.nameTypeSubTypeAr,
-                                        homeController.AboutTypeSubTypeEn,
-                                        homeController
-                                            .AboutTypeSubTypeEn, ///////////////////////////......Image..............//////
-                                        homeController.PriceTypeOfSubType,
+                                            .ImageEditOfferAr, ///////////////////////////......Image..............//////
+                                        homeController.PriceOfferEdit,
                                       );
                                     } else {
-                                      homeController.addNewOffer(
-                                        homeController.nameOffer.toString(),
-                                        homeController.DescriptionOfOffer
-                                            .toString(),
-                                        homeController.priceOffers.toString(),
-                                        homeController.imageOffer.toString(),
-                                      );
+                                      homeController.addOffer(
+                                          homeController.nameOffer.toString(),
+                                          homeController.DescriptionOfOffer
+                                              .toString(),
+                                          homeController.imageName.toString(),
+                                          homeController.priceOffers);
+
+                                      homeController.uploadImageToServer();
                                     }
                                   },
                                   child: ContainerCustomApi(
@@ -266,7 +324,7 @@ class _AddNewOffersState extends State<AddNewOffers> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 47.h),
                                       child: Text(
-                                        "إضافة-تعديل التفرع الان",
+                                        "إضافة-تعديل العرض الان",
                                         style: TextStyle(
                                           color: AppColors.balckColorTypeThree,
                                           fontFamily: AppTextStyles.Almarai,
@@ -283,66 +341,6 @@ class _AddNewOffersState extends State<AddNewOffers> {
                       ),
                     )),
                   ]),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.showTheListOfSubType.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.showTheListOfSubType.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.showTheListOfSubType.value,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: ListOfSubTypes(),
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Lottie.asset(ImagesPath.loading, width: 70.w),
-                                Text(
-                                  "يتم رفع الصورة أنتظر قليلاً",
-                                  style: TextStyle(
-                                    color: AppColors.whiteColor,
-                                    fontFamily: AppTextStyles.Almarai,
-                                    fontSize: 4.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))),
                   GetX<HomeController>(
                       builder: (controller) => Visibility(
                           visible: controller.addToDataBase.value,

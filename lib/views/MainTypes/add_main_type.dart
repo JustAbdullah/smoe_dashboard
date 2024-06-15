@@ -44,7 +44,7 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                         theBottom: 20.h,
                         child: Directionality(
                           textDirection: TextDirection.rtl,
-                          child: Column(children: [
+                          child: Column(children: <Widget>[
                             SizedBox(
                               height: 40.h,
                             ),
@@ -52,7 +52,7 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                               alignment: Alignment.topCenter,
                               child: TextCustom(
                                   height: 1.5.h,
-                                  theText: "صفحة إضافة-تعديل الخدمات الرئيسية",
+                                  theText: "صفحة إضافة-تعديل الانواع الرئيسية",
                                   fontSizeWidth: 7.sp,
                                   fontFamily: AppTextStyles.Almarai,
                                   fontColor: AppColors.blackColor),
@@ -65,7 +65,7 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 50.w),
                                 child: Text(
-                                  "لطفًا قم بإدخال البيانات لإضافة-تعديل الخدمات الرئيسية في كرز",
+                                  "لطفًا قم بإدخال البيانات لإضافة-تعديل الانواع الرئيسية في سموي",
                                   style: TextStyle(
                                       height: 1.5.h,
                                       fontSize: 5.sp,
@@ -102,7 +102,7 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                                       controller: homeController.controllerOne,
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
-                                          hintText: 'اسم الخدمة بالعربي',
+                                          hintText: 'اسم النوع بالعربي',
                                           isDense: true, // important line
                                           contentPadding: EdgeInsets.fromLTRB(
                                               10,
@@ -120,8 +120,8 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                                               borderRadius:
                                                   BorderRadius.circular(30),
                                               borderSide: BorderSide.none)),
-                                      maxLines: 2,
-                                      minLines: 2,
+                                      maxLines: 4,
+                                      minLines: 4,
                                     ),
                                   ),
                                 )),
@@ -153,7 +153,7 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                                       },
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
-                                          hintText: 'اسم الخدمة بالانجليزي',
+                                          hintText: 'اسم النوع بالانجليزي',
                                           isDense: true, // important line
                                           contentPadding: EdgeInsets.fromLTRB(
                                               10,
@@ -171,8 +171,8 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                                               borderRadius:
                                                   BorderRadius.circular(30),
                                               borderSide: BorderSide.none)),
-                                      maxLines: 15,
-                                      minLines: 15,
+                                      maxLines: 4,
+                                      minLines: 4,
                                     ),
                                   ),
                                 )),
@@ -182,50 +182,55 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                TextCustom(
-                                    height: 1.5.h,
-                                    theText: "اختيار صورة رمزية للخدمة:",
-                                    fontSizeWidth: 5.sp,
-                                    fontFamily: AppTextStyles.Almarai,
-                                    fontColor: AppColors.blackColor),
-                                InkWell(
-                                  onTap: () async {
-                                    homeController.chooseImageOne();
-                                  },
-                                  child: GetX<HomeController>(
-                                    builder: (controller) => ContainerCustomApi(
-                                        colorContainer:
-                                            controller.addImageWork.value ==
-                                                    true
-                                                ? Colors.green
-                                                : AppColors.redColor,
-                                        theBorderRadius: 15,
-                                        heigthContainer: 30.h,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 37.h),
-                                          child: Text(
-                                            controller.addImageWork.value ==
-                                                    true
-                                                ? "تم رفع الصورة"
-                                                : "رفع صورة",
-                                            style: TextStyle(
-                                              color: AppColors.whiteColor,
-                                              fontFamily: AppTextStyles.Almarai,
-                                              fontSize: 4.sp,
-                                            ),
-                                          ),
-                                        )),
+                            InkWell(
+                                onTap: () async {
+                                  homeController.chooseAndDisplayImage();
+                                },
+                                child: Container(
+                                  width: 70.w,
+                                  height: 80.h,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.cyan[600]),
+                                  child: Center(
+                                    child: TextCustom(
+                                        height: 1.5.h,
+                                        theText: "اختيار صورة:",
+                                        fontSizeWidth: 5.sp,
+                                        fontFamily: AppTextStyles.Almarai,
+                                        fontColor: AppColors.whiteColor),
                                   ),
-                                ),
-                              ],
-                            ),
+                                )),
                             SizedBox(
-                              height: 30.h,
+                              height: 10.h,
+                            ),
+                            GetX<HomeController>(
+                                builder: (controller) => Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        if (controller.isUploadImage.value ==
+                                            true)
+                                          Image.memory(
+                                            controller.imageBytes!,
+                                            width: 100.w, // عرض الصورة
+                                            height: 200.h, // ارتفاع الصورة
+                                            fit: BoxFit
+                                                .cover, // ضبط الصورة لتغطية الحجم المحدد
+                                          )
+                                        else
+                                          TextCustom(
+                                              height: 1.5.h,
+                                              theText: "لم يتم إختيار اي صورة",
+                                              fontSizeWidth: 5.sp,
+                                              fontFamily: AppTextStyles.Almarai,
+                                              fontColor: AppColors.redColor),
+                                      ],
+                                    )),
+                            SizedBox(
+                              height: 40.h,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -235,8 +240,12 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                                   onTap: () {
                                     if (homeController.isChooseEditMainType ==
                                         1) {
+                                      if (homeController.EditImage == 1) {
+                                        homeController.uploadImageToServer();
+                                      }
                                       homeController.editMainType(
-                                          homeController.idMainTypeEdit
+                                          homeController
+                                              .ofIdMainTypeDeleteOrEdit
                                               .toString(),
                                           homeController.nameArEditMainType
                                               .toString(),
@@ -245,13 +254,13 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                                           homeController.iconEditMainType
                                               .toString());
                                     } else {
-                                      homeController.addNewMainType(
+                                      homeController.addMainType(
                                           homeController.nameOFTypeMain
                                               .toString(),
                                           homeController.nameEnglishTypeMain
                                               .toString(),
-                                          homeController.urlImageOne
-                                              .toString());
+                                          homeController.imageName.toString());
+                                      homeController.uploadImageToServer();
                                     }
                                   },
                                   child: ContainerCustomApi(
@@ -262,7 +271,7 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 47.h),
                                       child: Text(
-                                        "إضافة-تعديل الخدمة الان",
+                                        "إضافة-تعديل النوع الان",
                                         style: TextStyle(
                                           color: AppColors.balckColorTypeThree,
                                           fontFamily: AppTextStyles.Almarai,
@@ -279,43 +288,6 @@ class _AddMainTypeScreenDeskTopState extends State<AddMainTypeScreenDeskTop> {
                       ),
                     )),
                   ]),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Lottie.asset(ImagesPath.loading, width: 70.w),
-                                Text(
-                                  "يتم رفع الصورة أنتظر قليلاً",
-                                  style: TextStyle(
-                                    color: AppColors.whiteColor,
-                                    fontFamily: AppTextStyles.Almarai,
-                                    fontSize: 4.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))),
                   GetX<HomeController>(
                       builder: (controller) => Visibility(
                           visible: controller.addToDataBase.value,

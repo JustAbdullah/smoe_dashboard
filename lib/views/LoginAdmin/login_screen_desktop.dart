@@ -38,7 +38,6 @@ class LoginScreenDeskTop extends StatelessWidget {
                     height: 80.h,
                     decoration: BoxDecoration(
                         color: AppColors.balckColorTypeThree.withOpacity(0.5),
-                        
                         shape: BoxShape.circle),
                     child: Image.asset(ImagesPath.logo),
                   ),
@@ -48,7 +47,7 @@ class LoginScreenDeskTop extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "صفحة تسجيل الدخول للوحة تحكم ســـموي",
+                      "صفحة تسجيل الدخول لوحة تحكم ســـموي",
                       style: TextStyle(
                           color: AppColors.balckColorTypeThree,
                           fontFamily: AppTextStyles.Almarai,
@@ -149,6 +148,7 @@ class LoginScreenDeskTop extends StatelessWidget {
                               theText: "الدخول  الان",
                               fontSizeWidth: 5.sp,
                               fontFamily: AppTextStyles.Almarai,
+                              fontWeight: FontWeight.bold,
                               fontColor: AppColors.theAppColorBlue,
                               height: 1.5.h),
                         )),

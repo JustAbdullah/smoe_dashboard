@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../core/constant/app_text_styles.dart';
 import '../../core/constant/appcolors.dart';
 import '../../core/constant/images_path.dart';
+import '../../core/data/model/users.dart';
 import '../../customWidgets/custom_container.dart';
 import '../../customWidgets/custom_container_api.dart';
 import '../../customWidgets/custom_padding.dart';
@@ -253,253 +254,282 @@ class ViewUsers extends StatelessWidget {
                                                   .size
                                                   .height,
                                               child: GetX<HomeController>(
-                                                builder: (controller) =>
-                                                    FutureBuilder(
-                                                        future: controller
-                                                                    .TheResultNameSearch
-                                                                    .value ==
-                                                                true
-                                                            ? controller.searchinfUserName(
+                                                builder: (controller) => FutureBuilder<
+                                                        List<Users>>(
+                                                    future: controller
+                                                                .TheResultNameSearch
+                                                                .value ==
+                                                            true
+                                                        ? controller
+                                                            .searchinfUserName(
                                                                 controller
                                                                     .nameSearching
                                                                     .toString())
-                                                            : homeController
-                                                                .getDataUsersFromDatabase(),
-                                                        builder: (BuildContext
-                                                                context,
+                                                        : homeController
+                                                            .getDataUsersFromDatabase(),
+                                                    builder:
+                                                        (BuildContext context,
                                                             AsyncSnapshot
                                                                 snapshot) {
-                                                          if (snapshot
-                                                              .hasData) {
-                                                            return controller
-                                                                        .noDataSearching
-                                                                        .value ==
-                                                                    false
-                                                                ? Center(
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        TextCustom(
-                                                                            height: 1.3
-                                                                                .h,
-                                                                            theText:
-                                                                                "لايوجد هنالك بيانات من عملية البحث",
-                                                                            fontSizeWidth:
-                                                                                15,
-                                                                            fontFamily:
-                                                                                AppTextStyles.Almarai,
-                                                                            fontWeight: FontWeight.bold,
-                                                                            fontColor: AppColors.theAppColorBlue),
-                                                                      ],
-                                                                    ),
-                                                                  )
-                                                                : ListView
-                                                                    .builder(
-                                                                        scrollDirection:
-                                                                            Axis
-                                                                                .vertical,
-                                                                        itemCount: snapshot
-                                                                            .data[
-                                                                                'data']
-                                                                            .length,
-                                                                        shrinkWrap:
-                                                                            true,
-                                                                        itemBuilder:
-                                                                            (context,
-                                                                                i) {
-                                                                          return Column(
-                                                                            children: [
-                                                                              Container(
-                                                                                width: MediaQuery.of(context).size.width,
-                                                                                height: 50.h,
-                                                                                child: Padding(
-                                                                                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                                                                                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                                                                    Container(
-                                                                                      alignment: Alignment.center,
-                                                                                      width: 40.w,
-                                                                                      child: TextCustom(theText: snapshot.data['data'][i]['user_id'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 5.w,
-                                                                                    ),
-                                                                                    Container(
-                                                                                      alignment: Alignment.center,
-                                                                                      width: 40.w,
-                                                                                      child: TextCustom(theText: snapshot.data['data'][i]['user_name'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 5.w,
-                                                                                    ),
-                                                                                    Container(
-                                                                                      alignment: Alignment.center,
-                                                                                      width: 40.w,
-                                                                                      child: TextCustom(theText: snapshot.data['data'][i]['user_number_phone'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 5.w,
-                                                                                    ),
-                                                                                    Container(
-                                                                                      alignment: Alignment.center,
-                                                                                      width: 30.w,
-                                                                                      child: TextCustom(theText: snapshot.data['data'][i]['user_date'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 5.w,
-                                                                                    ),
-                                                                                    InkWell(
-                                                                                        onTap: () {
-                                                                                          homeController.ofIdMainTypeDeleteOrEdit = snapshot.data['data'][i]['user_id'].toString();
-                                                                                          homeController.showMore.value = true;
-                                                                                        },
-                                                                                        child: Container(
-                                                                                          decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(3)),
-                                                                                          alignment: Alignment.center,
-                                                                                          width: 40.w,
-                                                                                          child: TextCustom(theText: "إدارة", fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.whiteColor, height: 1.5.h),
-                                                                                        )),
-                                                                                  ]),
+                                                      if (snapshot.hasData) {
+                                                        return controller
+                                                                    .noDataSearching
+                                                                    .value ==
+                                                                false
+                                                            ? Center(
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    TextCustom(
+                                                                        height: 1.3
+                                                                            .h,
+                                                                        theText:
+                                                                            "لايوجد هنالك بيانات من عملية البحث",
+                                                                        fontSizeWidth:
+                                                                            15,
+                                                                        fontFamily:
+                                                                            AppTextStyles
+                                                                                .Almarai,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontColor:
+                                                                            AppColors.theAppColorBlue),
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            : ListView.builder(
+                                                                shrinkWrap:
+                                                                    true,
+                                                                scrollDirection:
+                                                                    Axis
+                                                                        .vertical,
+                                                                itemCount:
+                                                                    snapshot
+                                                                        .data!
+                                                                        .length,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        index) {
+                                                                  Users user =
+                                                                      snapshot.data![
+                                                                          index];
+
+                                                                  return Column(
+                                                                    children: [
+                                                                      Container(
+                                                                        width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width,
+                                                                        height:
+                                                                            50.h,
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsets.symmetric(
+                                                                              horizontal: 10.w,
+                                                                              vertical: 10.h),
+                                                                          child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  width: 40.w,
+                                                                                  child: TextCustom(theText: user.id, fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
                                                                                 ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 10.h,
-                                                                              ),
-                                                                              Container(
-                                                                                width: MediaQuery.of(context).size.width - 20,
-                                                                                height: 0.1.h,
-                                                                                color: AppColors.balckColorTypeThree,
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        });
-                                                          } else {
-                                                            return ListView
-                                                                .builder(
-                                                                    scrollDirection:
-                                                                        Axis
-                                                                            .vertical,
-                                                                    itemCount:
-                                                                        5,
-                                                                    shrinkWrap:
-                                                                        true,
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            i) {
-                                                                      return Shimmer.fromColors(
-                                                                          baseColor: Color.fromARGB(31, 169, 167, 167),
-                                                                          highlightColor: AppColors.whiteColor,
-                                                                          enabled: true,
-                                                                          child: Padding(
-                                                                            padding:
-                                                                                EdgeInsets.symmetric(horizontal: 10.h),
+                                                                                SizedBox(
+                                                                                  width: 5.w,
+                                                                                ),
+                                                                                Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  width: 40.w,
+                                                                                  child: TextCustom(theText: user.name, fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 5.w,
+                                                                                ),
+                                                                                Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  width: 40.w,
+                                                                                  child: TextCustom(theText: user.phone, fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 5.w,
+                                                                                ),
+                                                                                Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  width: 30.w,
+                                                                                  child: TextCustom(theText: user.date, fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 5.w,
+                                                                                ),
+                                                                                InkWell(
+                                                                                    onTap: () {
+                                                                                      homeController.ofIdMainTypeDeleteOrEdit = user.id;
+                                                                                      homeController.showMore.value = true;
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(3)),
+                                                                                      alignment: Alignment.center,
+                                                                                      width: 40.w,
+                                                                                      child: TextCustom(theText: "إدارة", fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.whiteColor, height: 1.5.h),
+                                                                                    )),
+                                                                              ]),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      Container(
+                                                                        width: MediaQuery.of(context).size.width -
+                                                                            20,
+                                                                        height:
+                                                                            0.1.h,
+                                                                        color: AppColors
+                                                                            .balckColorTypeThree,
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                      } else {
+                                                        return ListView.builder(
+                                                            scrollDirection:
+                                                                Axis.vertical,
+                                                            itemCount: 5,
+                                                            shrinkWrap: true,
+                                                            itemBuilder:
+                                                                (context, i) {
+                                                              return Shimmer
+                                                                  .fromColors(
+                                                                      baseColor: Color.fromARGB(
+                                                                          31,
+                                                                          169,
+                                                                          167,
+                                                                          167),
+                                                                      highlightColor:
+                                                                          AppColors
+                                                                              .whiteColor,
+                                                                      enabled:
+                                                                          true,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            EdgeInsets.symmetric(horizontal: 10.h),
+                                                                        child:
+                                                                            PaddingCustom(
+                                                                          theBottom:
+                                                                              10,
+                                                                          child:
+                                                                              ContainerCustom(
+                                                                            theBorderRadius:
+                                                                                10,
+                                                                            colorContainer:
+                                                                                AppColors.whiteColor,
+                                                                            heigthContainer:
+                                                                                130,
+                                                                            widthContainer:
+                                                                                MediaQuery.sizeOf(context).width,
                                                                             child:
-                                                                                PaddingCustom(
-                                                                              theBottom: 10,
-                                                                              child: ContainerCustom(
-                                                                                theBorderRadius: 10,
-                                                                                colorContainer: AppColors.whiteColor,
-                                                                                heigthContainer: 130,
-                                                                                widthContainer: MediaQuery.sizeOf(context).width,
-                                                                                child: SingleChildScrollView(
-                                                                                  scrollDirection: Axis.horizontal,
-                                                                                  child: Row(
+                                                                                SingleChildScrollView(
+                                                                              scrollDirection: Axis.horizontal,
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  Row(
                                                                                     children: [
-                                                                                      Row(
-                                                                                        children: [
-                                                                                          Column(
-                                                                                            children: [
-                                                                                              InkWell(
-                                                                                                onTap: () {},
-                                                                                                child: Image.asset(
-                                                                                                  "${ImagesPath.logo}",
-                                                                                                  width: 100,
-                                                                                                  height: 100,
-                                                                                                  fit: BoxFit.contain,
-                                                                                                ),
-                                                                                              ),
-                                                                                              SizedBox(
-                                                                                                height: 10.h,
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
-                                                                                      SizedBox(
-                                                                                        width: 5.w,
-                                                                                      ),
                                                                                       Column(
                                                                                         children: [
-                                                                                          Align(
-                                                                                            alignment: Alignment.topCenter,
-                                                                                            child: PaddingCustom(
-                                                                                              theTop: 30,
-                                                                                              child: TextCustom(
-                                                                                                height: 1.5.h,
-                                                                                                theText: "يتم التحميل",
-                                                                                                fontColor: AppColors.blackColor,
-                                                                                                fontFamily: AppTextStyles.Almarai,
-                                                                                                fontSizeWidth: 6.sp,
-                                                                                                fontWeight: FontWeight.bold,
-                                                                                              ),
+                                                                                          InkWell(
+                                                                                            onTap: () {},
+                                                                                            child: Image.asset(
+                                                                                              "${ImagesPath.logo}",
+                                                                                              width: 100,
+                                                                                              height: 100,
+                                                                                              fit: BoxFit.contain,
                                                                                             ),
                                                                                           ),
-                                                                                          Container(
-                                                                                            width: 150.w,
-                                                                                            height: 100.h,
-                                                                                            child: PaddingCustom(
-                                                                                              theTop: 15,
-                                                                                              child: Text(
-                                                                                                "يتم التحميل",
-                                                                                                maxLines: 4,
-                                                                                                style: TextStyle(fontSize: 14.sp, height: 1.7.h, color: AppColors.balckColorTypeThree, fontFamily: AppTextStyles.Almarai),
-                                                                                                textAlign: TextAlign.center,
-                                                                                              ),
-                                                                                            ),
+                                                                                          SizedBox(
+                                                                                            height: 10.h,
                                                                                           ),
                                                                                         ],
                                                                                       ),
-                                                                                      Padding(
-                                                                                        padding: EdgeInsets.symmetric(vertical: 10.h),
-                                                                                        child: Column(
-                                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                          children: [
-                                                                                            Align(
-                                                                                              alignment: Alignment.topCenter,
-                                                                                              child: PaddingCustom(
-                                                                                                theTop: 5,
-                                                                                                child: ContainerCustomApi(
-                                                                                                  colorContainer: AppColors.theAppColorBlue,
-                                                                                                  theBorderRadius: 15,
-                                                                                                  heigthContainer: 15.h,
-                                                                                                  child: Padding(
-                                                                                                    padding: EdgeInsets.symmetric(horizontal: 8.h),
-                                                                                                    child: Text(
-                                                                                                      "يتم التحميل",
-                                                                                                      style: TextStyle(
-                                                                                                        color: AppColors.blackColor,
-                                                                                                        fontFamily: AppTextStyles.Almarai,
-                                                                                                        fontSize: 14.sp,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
+                                                                                    ],
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: 5.w,
+                                                                                  ),
+                                                                                  Column(
+                                                                                    children: [
+                                                                                      Align(
+                                                                                        alignment: Alignment.topCenter,
+                                                                                        child: PaddingCustom(
+                                                                                          theTop: 30,
+                                                                                          child: TextCustom(
+                                                                                            height: 1.5.h,
+                                                                                            theText: "يتم التحميل",
+                                                                                            fontColor: AppColors.blackColor,
+                                                                                            fontFamily: AppTextStyles.Almarai,
+                                                                                            fontSizeWidth: 6.sp,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                      Container(
+                                                                                        width: 150.w,
+                                                                                        height: 100.h,
+                                                                                        child: PaddingCustom(
+                                                                                          theTop: 15,
+                                                                                          child: Text(
+                                                                                            "يتم التحميل",
+                                                                                            maxLines: 4,
+                                                                                            style: TextStyle(fontSize: 14.sp, height: 1.7.h, color: AppColors.balckColorTypeThree, fontFamily: AppTextStyles.Almarai),
+                                                                                            textAlign: TextAlign.center,
+                                                                                          ),
                                                                                         ),
                                                                                       ),
                                                                                     ],
                                                                                   ),
-                                                                                ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                                                                                    child: Column(
+                                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                      children: [
+                                                                                        Align(
+                                                                                          alignment: Alignment.topCenter,
+                                                                                          child: PaddingCustom(
+                                                                                            theTop: 5,
+                                                                                            child: ContainerCustomApi(
+                                                                                              colorContainer: AppColors.theAppColorBlue,
+                                                                                              theBorderRadius: 15,
+                                                                                              heigthContainer: 15.h,
+                                                                                              child: Padding(
+                                                                                                padding: EdgeInsets.symmetric(horizontal: 8.h),
+                                                                                                child: Text(
+                                                                                                  "يتم التحميل",
+                                                                                                  style: TextStyle(
+                                                                                                    color: AppColors.blackColor,
+                                                                                                    fontFamily: AppTextStyles.Almarai,
+                                                                                                    fontSize: 14.sp,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
                                                                               ),
                                                                             ),
-                                                                          ));
-                                                                    });
-                                                          }
-                                                        }),
+                                                                          ),
+                                                                        ),
+                                                                      ));
+                                                            });
+                                                      }
+                                                    }),
                                               ),
                                             )
                                           ]),

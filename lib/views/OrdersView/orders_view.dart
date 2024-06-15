@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../core/constant/app_text_styles.dart';
 import '../../core/constant/appcolors.dart';
 import '../../core/constant/images_path.dart';
+import '../../core/data/model/list_of_order.dart';
 import '../../customWidgets/custom_container.dart';
 import '../../customWidgets/custom_container_api.dart';
 import '../../customWidgets/custom_padding.dart';
@@ -295,56 +296,43 @@ class OrdersView extends StatelessWidget {
                                                 height: 10.h,
                                               ),
                                               SizedBox(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                child: GetX<HomeController>(
-                                                  builder: (controller) =>
-                                                      FutureBuilder(
-                                                          future: controller
-                                                                      .TheResultNameSearch
-                                                                      .value ==
-                                                                  true
-                                                              ? controller.searchinOrder(
-                                                                  controller
-                                                                      .nameSearching
-                                                                      .toString())
-                                                              : homeController
-                                                                  .getOrders(),
-                                                          builder: (BuildContext
-                                                                  context,
-                                                              AsyncSnapshot
-                                                                  snapshot) {
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  height: MediaQuery.of(context)
+                                                      .size
+                                                      .height,
+                                                  child:
+                                                      FutureBuilder<
+                                                              List<Order>>(
+                                                          future: homeController
+                                                              .fetchOrders(),
+                                                          builder: (context,
+                                                              snapshot) {
                                                             if (snapshot
-                                                                .hasData) {
-                                                              return controller
-                                                                          .noDataSearching
-                                                                          .value ==
-                                                                      false
-                                                                  ? Center(
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.center,
-                                                                        children: [
-                                                                          TextCustom(
-                                                                              height: 1.3.h,
-                                                                              theText: "لايوجد هنالك بيانات من عملية البحث",
-                                                                              fontSizeWidth: 15,
-                                                                              fontFamily: AppTextStyles.Almarai,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontColor: AppColors.theAppColorBlue),
-                                                                        ],
-                                                                      ),
-                                                                    )
-                                                                  : ListView.builder(
-                                                                      scrollDirection: Axis.vertical,
-                                                                      itemCount: snapshot.data['data'].length,
-                                                                      shrinkWrap: true,
-                                                                      itemBuilder: (context, i) {
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .waiting) {
+                                                              return Center(
+                                                                  child:
+                                                                      CircularProgressIndicator());
+                                                            } else if (snapshot
+                                                                .hasError) {
+                                                              return Center(
+                                                                  child: Text(
+                                                                      'Error: ${snapshot.error}'));
+                                                            } else {
+                                                              return ListView
+                                                                  .builder(
+                                                                      itemCount: snapshot
+                                                                          .data!
+                                                                          .length,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              index) {
+                                                                        Order
+                                                                            order =
+                                                                            snapshot.data![index];
                                                                         return Column(
                                                                           children: [
                                                                             Container(
@@ -356,7 +344,7 @@ class OrdersView extends StatelessWidget {
                                                                                   Container(
                                                                                     alignment: Alignment.center,
                                                                                     width: 35.w,
-                                                                                    child: TextCustom(theText: snapshot.data['data'][i]['order_number'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                    child: TextCustom(theText: order.order_id.toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
                                                                                   ),
                                                                                   SizedBox(
                                                                                     width: 5.w,
@@ -364,7 +352,7 @@ class OrdersView extends StatelessWidget {
                                                                                   Container(
                                                                                     alignment: Alignment.center,
                                                                                     width: 35.w,
-                                                                                    child: TextCustom(theText: snapshot.data['data'][i]['user_name'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                    child: TextCustom(theText: order.order_number.toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
                                                                                   ),
                                                                                   SizedBox(
                                                                                     width: 5.w,
@@ -372,7 +360,7 @@ class OrdersView extends StatelessWidget {
                                                                                   Container(
                                                                                     alignment: Alignment.center,
                                                                                     width: 35.w,
-                                                                                    child: TextCustom(theText: snapshot.data['data'][i]['name'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                    child: TextCustom(theText: order.order_status.toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
                                                                                   ),
                                                                                   SizedBox(
                                                                                     width: 5.w,
@@ -380,7 +368,7 @@ class OrdersView extends StatelessWidget {
                                                                                   Container(
                                                                                     alignment: Alignment.center,
                                                                                     width: 35.w,
-                                                                                    child: TextCustom(theText: snapshot.data['data'][i]['services_main_name_ar'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: Colors.green, height: 1.5.h),
+                                                                                    child: TextCustom(theText: order.time_order_user.toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: Colors.green, height: 1.5.h),
                                                                                   ),
                                                                                   SizedBox(
                                                                                     width: 5.w,
@@ -388,7 +376,7 @@ class OrdersView extends StatelessWidget {
                                                                                   Container(
                                                                                     alignment: Alignment.center,
                                                                                     width: 35.w,
-                                                                                    child: TextCustom(theText: snapshot.data['data'][i]['price_totle'].toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                    child: TextCustom(theText: order.date_order_user.toString(), fontSizeWidth: 5.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
                                                                                   ),
                                                                                   SizedBox(
                                                                                     width: 5.w,
@@ -397,16 +385,16 @@ class OrdersView extends StatelessWidget {
                                                                                     alignment: Alignment.center,
                                                                                     width: 35.w,
                                                                                     child: TextCustom(
-                                                                                        theText: snapshot.data['data'][i]['order_confirmation'] == "3"
+                                                                                        theText: order.order_status.toString() == "3"
                                                                                             ? "منتهية"
-                                                                                            : snapshot.data['data'][i]['order_confirmation'] == "2"
+                                                                                            : order.order_status.toString() == "2"
                                                                                                 ? "قيد العمل"
                                                                                                 : "انتظار",
                                                                                         fontSizeWidth: 5.2.sp,
                                                                                         fontFamily: AppTextStyles.Almarai,
-                                                                                        fontColor: snapshot.data['data'][i]['order_confirmation'] == "3"
+                                                                                        fontColor: order.order_status.toString() == "3"
                                                                                             ? AppColors.redColor
-                                                                                            : snapshot.data['data'][i]['order_confirmation'] == "2"
+                                                                                            : order.order_status.toString() == "2"
                                                                                                 ? Colors.green
                                                                                                 : AppColors.yellowColor,
                                                                                         height: 1.5.h),
@@ -420,11 +408,11 @@ class OrdersView extends StatelessWidget {
                                                                                     child: SingleChildScrollView(
                                                                                       child: Column(
                                                                                         children: [
-                                                                                          TextCustom(theText: snapshot.data['data'][i]['order_date'], fontSizeWidth: 4.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
+                                                                                          TextCustom(theText: order.order_status.toString(), fontSizeWidth: 4.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h),
                                                                                           SizedBox(
                                                                                             height: 2.h,
                                                                                           ),
-                                                                                          Directionality(textDirection: TextDirection.ltr, child: TextCustom(theText: snapshot.data['data'][i]['order_time'], fontSizeWidth: 4.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h)),
+                                                                                          Directionality(textDirection: TextDirection.ltr, child: TextCustom(theText: order.order_status.toString(), fontSizeWidth: 4.2.sp, fontFamily: AppTextStyles.Almarai, fontColor: AppColors.balckColorTypeThree, height: 1.5.h)),
                                                                                         ],
                                                                                       ),
                                                                                     ),
@@ -443,131 +431,8 @@ class OrdersView extends StatelessWidget {
                                                                           ],
                                                                         );
                                                                       });
-                                                            } else {
-                                                              return ListView
-                                                                  .builder(
-                                                                      scrollDirection:
-                                                                          Axis
-                                                                              .vertical,
-                                                                      itemCount:
-                                                                          5,
-                                                                      shrinkWrap:
-                                                                          true,
-                                                                      itemBuilder:
-                                                                          (context,
-                                                                              i) {
-                                                                        return Shimmer.fromColors(
-                                                                            baseColor: Color.fromARGB(31, 169, 167, 167),
-                                                                            highlightColor: AppColors.whiteColor,
-                                                                            enabled: true,
-                                                                            child: Padding(
-                                                                              padding: EdgeInsets.symmetric(horizontal: 10.h),
-                                                                              child: PaddingCustom(
-                                                                                theBottom: 10,
-                                                                                child: ContainerCustom(
-                                                                                  theBorderRadius: 10,
-                                                                                  colorContainer: AppColors.whiteColor,
-                                                                                  heigthContainer: 130,
-                                                                                  widthContainer: MediaQuery.sizeOf(context).width,
-                                                                                  child: SingleChildScrollView(
-                                                                                    scrollDirection: Axis.horizontal,
-                                                                                    child: Row(
-                                                                                      children: [
-                                                                                        Row(
-                                                                                          children: [
-                                                                                            Column(
-                                                                                              children: [
-                                                                                                InkWell(
-                                                                                                  onTap: () {},
-                                                                                                  child: Image.asset(
-                                                                                                    "${ImagesPath.logo}",
-                                                                                                    width: 100,
-                                                                                                    height: 100,
-                                                                                                    fit: BoxFit.contain,
-                                                                                                  ),
-                                                                                                ),
-                                                                                                SizedBox(
-                                                                                                  height: 10.h,
-                                                                                                ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                        SizedBox(
-                                                                                          width: 5.w,
-                                                                                        ),
-                                                                                        Column(
-                                                                                          children: [
-                                                                                            Align(
-                                                                                              alignment: Alignment.topCenter,
-                                                                                              child: PaddingCustom(
-                                                                                                theTop: 30,
-                                                                                                child: TextCustom(
-                                                                                                  height: 1.5.h,
-                                                                                                  theText: "يتم التحميل",
-                                                                                                  fontColor: AppColors.blackColor,
-                                                                                                  fontFamily: AppTextStyles.Almarai,
-                                                                                                  fontSizeWidth: 6.sp,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                            Container(
-                                                                                              width: 150.w,
-                                                                                              height: 100.h,
-                                                                                              child: PaddingCustom(
-                                                                                                theTop: 15,
-                                                                                                child: Text(
-                                                                                                  "يتم التحميل",
-                                                                                                  maxLines: 4,
-                                                                                                  style: TextStyle(fontSize: 14.sp, height: 1.7.h, color: AppColors.balckColorTypeThree, fontFamily: AppTextStyles.Almarai),
-                                                                                                  textAlign: TextAlign.center,
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                        Padding(
-                                                                                          padding: EdgeInsets.symmetric(vertical: 10.h),
-                                                                                          child: Column(
-                                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                            children: [
-                                                                                              Align(
-                                                                                                alignment: Alignment.topCenter,
-                                                                                                child: PaddingCustom(
-                                                                                                  theTop: 5,
-                                                                                                  child: ContainerCustomApi(
-                                                                                                    colorContainer: AppColors.theAppColorBlue,
-                                                                                                    theBorderRadius: 15,
-                                                                                                    heigthContainer: 15.h,
-                                                                                                    child: Padding(
-                                                                                                      padding: EdgeInsets.symmetric(horizontal: 8.h),
-                                                                                                      child: Text(
-                                                                                                        "يتم التحميل",
-                                                                                                        style: TextStyle(
-                                                                                                          color: AppColors.blackColor,
-                                                                                                          fontFamily: AppTextStyles.Almarai,
-                                                                                                          fontSize: 14.sp,
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ));
-                                                                      });
                                                             }
-                                                          }),
-                                                ),
-                                              )
+                                                          }))
                                             ]),
                                           ),
                                         ),

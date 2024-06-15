@@ -404,7 +404,7 @@ class ViewServicesMan extends StatelessWidget {
                                                                                         if (homeController.typeOfAdmin.value != 2) {
                                                                                           homeController.aboutAccessTheAdminMessage.value = true;
                                                                                         } else {
-                                                                                          homeController.ofIdMainTypeDeleteOrEdit = snapshot.data['data'][i]['id'].toString();
+                                                                                          homeController.ofIdMainTypeDeleteOrEdit = snapshot.data['data'][i]['id'];
                                                                                           homeController.showMore.value = true;
                                                                                           /////////
                                                                                           homeController.idServiceManEdit = snapshot.data['data'][i]['id'].toString();
@@ -689,9 +689,9 @@ class ViewServicesMan extends StatelessWidget {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        controller.deleteServiceMan(controller
+                                        /*   controller.deleteServiceMan(controller
                                             .idServiceManEdit
-                                            .toString());
+                                            .toString());*/
                                       },
                                       child: Container(
                                           alignment: Alignment.center,

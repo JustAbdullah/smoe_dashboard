@@ -350,43 +350,6 @@ class _AddServiceManScreenDeskTopState
                           ))),
                   GetX<HomeController>(
                       builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Colors.black38,
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
-                          visible: controller.loadingImage.value,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Lottie.asset(ImagesPath.loading, width: 70.w),
-                                Text(
-                                  "يتم رفع الصورة أنتظر قليلاً",
-                                  style: TextStyle(
-                                    color: AppColors.whiteColor,
-                                    fontFamily: AppTextStyles.Almarai,
-                                    fontSize: 4.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))),
-                  GetX<HomeController>(
-                      builder: (controller) => Visibility(
                           visible: controller.addToDataBase.value,
                           child: Container(
                             width: MediaQuery.of(context).size.width,
